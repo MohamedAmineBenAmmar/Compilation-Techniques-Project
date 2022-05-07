@@ -1,12 +1,5 @@
-#include <stdlib.h>
-#include "./config/types.h"
-#include "./converter/converter.h"
+#include <stdio.h>
 
-int main(int argc, char **argv)
-{
-    Grammar g;
-
-    g = convert(argv[1]);
-
-    return 0;
+int main(int argc, char** argv){
+    printf("test");
 }

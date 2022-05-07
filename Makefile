@@ -1,4 +1,7 @@
-main_executable: main.o tokens.o preprocessor_minifier.o config_functions
+compile: syntactic_analyzer_main_executable
+	echo "test"
+
+lexical_analyzer_main_executable: main.o tokens.o preprocessor_minifier.o config_functions
 	gcc lexical_analyzer/tmp/build/functions.o lexical_analyzer/tmp/build/minifier.o lexical_analyzer/tmp/build/tokens.o lexical_analyzer/tmp/build/main.o -o lexical_analyzer/main
 
 main.o: lexical_analyzer/main.c
