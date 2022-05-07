@@ -1,0 +1,1 @@
+./lexical_analyzer/main.exe tests/src_code_examples/test1.txt

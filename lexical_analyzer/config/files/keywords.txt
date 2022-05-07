@@ -1,0 +1,10 @@
+if
+else
+for
+do
+while
+int
+float
+char
+break
+return

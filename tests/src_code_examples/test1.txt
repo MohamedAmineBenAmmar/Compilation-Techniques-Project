@@ -1,0 +1,12 @@
+int y, x;
+
+x = 10;
+y = 20;
+
+printf("Comparing x to y");
+
+if (x > y) {
+    printf("X is greter then Y");
+} else {
+    printf("X is lesser then Y");
+}
