@@ -7,6 +7,7 @@ Grammar convert(char *filePath)
 {
     FILE *filePointer;
     char buffer[255];
+    char tmpBuffer[255];
     int buffer_size;
     char ch;
 
@@ -61,7 +62,9 @@ Grammar convert(char *filePath)
                 {
                     // Setting the non terminal
                     ptr->nonTerminal = (char *)malloc((buffer_size-2) * sizeof(char));
-                    strncpy(ptr->nonTerminal, buffer, (buffer_size-2));
+                    strncpy(tmpBuffer, buffer, (buffer_size-2));
+                    strcpy(ptr->nonTerminal, tmpBuffer);
+                    ptr->nonTerminal[buffer_size -2] = '\0';
                     // ---------
 
                     buffer[0] = '\0';
@@ -102,6 +105,7 @@ Grammar convert(char *filePath)
                             // Allocating memory for the string
                             ptr->sll->string = (char *)malloc((buffer_size) * sizeof(char));
                             strcpy(ptr->sll->string, buffer);
+                            ptr->sll->string[buffer_size] = '\0';                            
                             ptr->sll->next = NULL;
                         } else {
                             // Addiong nodes at the tail of the linked list
@@ -115,7 +119,8 @@ Grammar convert(char *filePath)
                             tmp_sll_ptr = tmp_sll_ptr->next;
 
                             tmp_sll_ptr->string = (char *)malloc((buffer_size) * sizeof(char));
-                            strcpy(tmp_sll_ptr->string, buffer);                            
+                            strcpy(tmp_sll_ptr->string, buffer);    
+                            tmp_sll_ptr->string[buffer_size] = '\0';                        
                             tmp_sll_ptr->next = NULL;
                         }
                         // -----
@@ -137,4 +142,6 @@ Grammar convert(char *filePath)
     }
 
     fclose(filePointer);
+
+    return g;
 }

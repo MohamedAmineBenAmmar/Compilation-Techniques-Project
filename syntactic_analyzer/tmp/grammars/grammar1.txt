@@ -1,5 +1,4 @@
-E->TE'|
-E'->+TE'|£|
-T->FT'|
-T'->*FT'|£|
-F->(E)|id|
+s->ABC|
+A->aA|@|
+B->bB|cB|@|
+C->dC|da|dA|

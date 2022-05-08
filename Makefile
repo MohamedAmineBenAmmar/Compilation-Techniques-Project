@@ -1,8 +1,8 @@
 compile: syntactic_analyzer_main_executable
 	echo "Compilation done successfully"
 
-syntactic_analyzer_main_executable: syn_main.o syn_functions.o syn_converter.o
-	gcc syntactic_analyzer/tmp/build/main.o syntactic_analyzer/tmp/build/functions.o syntactic_analyzer/tmp/build/converter.o -o syntactic_analyzer/main
+syntactic_analyzer_main_executable: syn_main.o syn_functions.o syn_converter.o first.o
+	gcc syntactic_analyzer/tmp/build/main.o syntactic_analyzer/tmp/build/first.o syntactic_analyzer/tmp/build/functions.o syntactic_analyzer/tmp/build/converter.o -o syntactic_analyzer/main
 
 syn_main.o: syntactic_analyzer/main.c
 	gcc -c syntactic_analyzer/main.c -o syntactic_analyzer/tmp/build/main.o
@@ -12,6 +12,10 @@ syn_functions.o: syntactic_analyzer/config/*
 
 syn_converter.o: syntactic_analyzer/converter/*
 	gcc -c syntactic_analyzer/converter/converter.c -o syntactic_analyzer/tmp/build/converter.o
+
+first.o: syntactic_analyzer/core/first/*
+	gcc -c syntactic_analyzer/core/first/first.c -o syntactic_analyzer/tmp/build/first.o
+
 
 lexical_analyzer_main_executable: lex_main.o lex_tokens.o lex_preprocessor_minifier.o lex_config_functions
 	gcc lexical_analyzer/tmp/build/functions.o lexical_analyzer/tmp/build/minifier.o lexical_analyzer/tmp/build/tokens.o lexical_analyzer/tmp/build/main.o -o lexical_analyzer/main
