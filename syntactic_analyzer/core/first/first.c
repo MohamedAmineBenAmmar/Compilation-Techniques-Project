@@ -31,7 +31,7 @@ void firstOf(Grammar main_node, Grammar secondary_node, Grammar g, SLL *firstOfA
 
         buffer[0] = sll_ptr->string[index];
         int isNonTerminalFlag = isNonTerminal(g, buffer);
-        
+
         // printf("Buffer %s\n", buffer);
         if (isNonTerminalFlag == 0)
         {
@@ -63,7 +63,10 @@ void firstOf(Grammar main_node, Grammar secondary_node, Grammar g, SLL *firstOfA
             {
                 *replace == 0;
                 index++;
-                goto check_point;
+                if (index < strlen(sll_ptr->string))
+                {
+                    goto check_point;
+                }
             }
         }
 
