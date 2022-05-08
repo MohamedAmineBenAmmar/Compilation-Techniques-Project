@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-
+void display(BaseNode* head);
 
 #endif

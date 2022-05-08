@@ -14,6 +14,9 @@ Grammar convert(char *filePath)
     int arrow_flag_detecter;
     int nonTerminal_flag;
 
+    Grammar g, ptr;
+    SLL tmp_sll_ptr;
+
     // Initial configuration
     buffer[0] = '\0';
     buffer_size = 0;
@@ -31,18 +34,19 @@ Grammar convert(char *filePath)
     else
     {
         // Handling the head of the Grammar linked list
-
+        g = (Grammar)malloc(sizeof(BaseNode));
+        g->sll = NULL;        
+        ptr = g;
         // -------
 
-        // Setting up the pointer inter pointer that is going to be used later on
-
-        // -------
         while ((ch = fgetc(filePointer)) != EOF)
         {
             if (ch == '\n')
             {
                 // Allocating the needed memory for the new GrammarNode + Handling nodes linking
-
+                ptr->next = (Grammar)malloc(sizeof(BaseNode));                
+                ptr = ptr->next;
+                ptr->sll = NULL;                
                 // -------
 
                 buffer[0] = '\0';
@@ -56,7 +60,8 @@ Grammar convert(char *filePath)
                 if (nonTerminal_flag == 0 && arrow_flag == 1)
                 {
                     // Setting the non terminal
-
+                    ptr->nonTerminal = (char *)malloc((buffer_size-2) * sizeof(char));
+                    strncpy(ptr->nonTerminal, buffer, (buffer_size-2));
                     // ---------
 
                     buffer[0] = '\0';
@@ -90,7 +95,29 @@ Grammar convert(char *filePath)
                     if (ch == '|')
                     {
                         // Handliing adding new production rule to the string linked list inside the grammar node
+                        if(ptr->sll == NULL){
+                            // Setting the head of string linked list
+                            ptr->sll = (SLL)malloc(sizeof(StringLinkedListNode));
 
+                            // Allocating memory for the string
+                            ptr->sll->string = (char *)malloc((buffer_size) * sizeof(char));
+                            strcpy(ptr->sll->string, buffer);
+                            ptr->sll->next = NULL;
+                        } else {
+                            // Addiong nodes at the tail of the linked list
+                            tmp_sll_ptr = ptr->sll;
+                            while (tmp_sll_ptr->next != NULL)
+                            {
+                                tmp_sll_ptr = tmp_sll_ptr->next;
+                            }
+
+                            tmp_sll_ptr->next = (SLL)malloc(sizeof(StringLinkedListNode));
+                            tmp_sll_ptr = tmp_sll_ptr->next;
+
+                            tmp_sll_ptr->string = (char *)malloc((buffer_size) * sizeof(char));
+                            strcpy(tmp_sll_ptr->string, buffer);                            
+                            tmp_sll_ptr->next = NULL;
+                        }
                         // -----
 
                         buffer[0] = '\0';
@@ -105,6 +132,8 @@ Grammar convert(char *filePath)
                 }
             }
         }
+
+        ptr->next = NULL;
     }
 
     fclose(filePointer);
