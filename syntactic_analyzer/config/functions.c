@@ -9,7 +9,6 @@ void display(BaseNode *head)
     SLL tmp_sll_ptr;
 
     ptr = head;
-    printf("Content:\n");
     while (ptr != NULL)
     {
         // printf("%s %d", ptr->nonTerminal, strlen(ptr->nonTerminal));
@@ -42,6 +41,27 @@ BaseNode *find(BaseNode *head, char *nonTerminal)
     while (ptr != NULL)
     {
         if (strcmp(nonTerminal, ptr->nonTerminal) == 0)
+        {
+            node_adr = ptr;
+            break;
+        }
+
+        ptr = ptr->next;
+    }
+
+    return node_adr;
+}
+
+SLL sll_find(SLL head, char *string)
+{
+    SLL node_adr, ptr;
+
+    node_adr = NULL;
+    ptr = head;
+
+    while (ptr != NULL)
+    {
+        if (strcmp(string, ptr->string) == 0)
         {
             node_adr = ptr;
             break;
@@ -118,20 +138,21 @@ void sll_append(SLL *head, char *string)
     }
 }
 
-int isNonTerminal(Grammar g, char* string)
+int isNonTerminal(Grammar g, char *string)
 {
     int result = 0;
     BaseNode *grammar_ptr = g;
 
     while (grammar_ptr != NULL)
     {
-        if(strcmp(grammar_ptr->nonTerminal, string) == 0){
+        if (strcmp(grammar_ptr->nonTerminal, string) == 0)
+        {
             result = 1;
             break;
         }
 
         grammar_ptr = grammar_ptr->next;
     }
-    
+
     return result;
 }

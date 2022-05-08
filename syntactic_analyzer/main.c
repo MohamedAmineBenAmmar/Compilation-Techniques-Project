@@ -6,13 +6,21 @@
 int main(int argc, char **argv)
 {
     // Extracting the grammar from the tmp folder
-    Grammar g = convert(argv[1]);
+    Grammar grammar;
+    First first;
+    Follow follow;
 
-    printf("%p\n", g);
     // Display the Grammar
-    display(g);
+    grammar = convert(argv[1]);
+    printf("Grammar:\n");
+    display(grammar);
+    printf("\n");
 
-    first_calculation(g);
+    // Display the First
+    first = first_calculation(grammar);
+    printf("First:\n");
+    display(first);
+    printf("\n");
 
     return 0;
 }

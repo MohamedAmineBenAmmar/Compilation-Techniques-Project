@@ -8,6 +8,7 @@ void firstOf(Grammar main_node, Grammar secondary_node, Grammar g, SLL *firstOfA
 {
     char c;
     SLL sll_ptr;
+    SLL sll_flag;
     char buffer[2];
     buffer[0] = ' ';
     buffer[1] = '\0';
@@ -22,6 +23,7 @@ void firstOf(Grammar main_node, Grammar secondary_node, Grammar g, SLL *firstOfA
     sll_ptr = secondary_node->sll;
     while (sll_ptr != NULL)
     {
+
     check_point:
         // printf("index value %d\n", index);
         // printf("sll indexes %c\n", sll_ptr->string[index]);
@@ -29,17 +31,25 @@ void firstOf(Grammar main_node, Grammar secondary_node, Grammar g, SLL *firstOfA
 
         buffer[0] = sll_ptr->string[index];
         int isNonTerminalFlag = isNonTerminal(g, buffer);
-
+        
         // printf("Buffer %s\n", buffer);
         if (isNonTerminalFlag == 0)
         {
             if (main_node == secondary_node)
             {
-                sll_append(firstOfArg, buffer);
+                sll_flag = sll_find(*firstOfArg, buffer);
+                if (sll_flag == NULL)
+                {
+                    sll_append(firstOfArg, buffer);
+                }
             }
             else if ((main_node != secondary_node) && (buffer[0] != '@'))
             {
-                sll_append(firstOfArg, buffer);
+                sll_flag = sll_find(*firstOfArg, buffer);
+                if (sll_flag == NULL)
+                {
+                    sll_append(firstOfArg, buffer);
+                }
             }
             else if ((main_node != secondary_node) && (buffer[0] == '@'))
             {
@@ -74,13 +84,13 @@ First first_calculation(Grammar g)
     while (grammar_ptr != NULL)
     {
         sll = NULL;
-
         firstOf(grammar_ptr, grammar_ptr, g, &sll, &replace);
-
         append(&first, grammar_ptr->nonTerminal, sll);
-        display(first);
+        // display(first);
 
-        scanf("%c", &c);
+        // scanf("%c", &c);
         grammar_ptr = grammar_ptr->next;
     }
+
+    return first;
 }

@@ -6,14 +6,14 @@
 // BaseNode functions
 void display(BaseNode* head);
 void append(BaseNode **head, char *nonTerminal, SLL sll);
+BaseNode *find(BaseNode *head, char *nonTerminal);
 
 // SLL functions
 SLL sll_constructor();
 void sll_append(SLL *head, char *string);
+SLL sll_find(SLL head, char *string);
 
 // Helper functions
-int isNonTerminal(Grammar g, char* string);
-
-BaseNode *find(BaseNode *head, char *nonTerminal);
+int isNonTerminal(Grammar g, char *string);
 
 #endif
