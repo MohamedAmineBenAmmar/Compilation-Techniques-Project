@@ -11,6 +11,7 @@ int main(int argc, char **argv)
     Grammar grammar;
     First first;
     Follow follow;
+    LL1PT ll1pt;
 
     // Display the Grammar
     grammar = convert(argv[1]);
@@ -31,7 +32,9 @@ int main(int argc, char **argv)
     printf("\n");
 
     // Display LL1 table skeleton
-    ll1pt_constructor(grammar, first, follow);
+    ll1pt = ll1pt_constructor(grammar, first, follow);
+
+    display_ll1pt(ll1pt, grammar);
 
     return 0;
 }

@@ -4,37 +4,51 @@
 #include "ll1pt.h"
 #include "../../config/functions_prototypes.h"
 
-// void split(Grammar grammar, SLL *terminals, SLL *nonTerminals)
-// {
-//     Grammar grammar_ptr;
-//     SLL sll_ptr;
-//     int isNonTerminalFlag;
+void split(Grammar grammar, SLL *terminals, SLL *nonTerminals)
+{
+    Grammar grammar_ptr;
+    SLL sll_ptr;
+    int isNonTerminalFlag;
 
-//     *terminals = NULL;
-//     *nonTerminals = NULL;
+    char buffer[2];
+    buffer[0] = ' ';
+    buffer[1] = '\0';
 
-//     grammar_ptr = grammar;
-//     while (grammar_ptr != NULL)
-//     {
-//         // Adding the non terminal to the non terminal linked list
-//         sll_append(*nonTerminals, grammar_ptr->nonTerminal, 0);
+    *terminals = NULL;
+    *nonTerminals = NULL;
 
-//         // Adding the terminals to the terminals list
-//         sll_ptr = grammar_ptr->sll;
-//         while (sll_ptr != NULL)
-//         {
-//             isNonTerminalFlag = isNonTerminal(grammar, sll_ptr->string);
-//             if (isNonTerminalFlag == 0)
-//             {
-//                 sll_append(*terminals, sll_ptr->string, 0);
-//             }
-//             sll_ptr = sll_ptr->next;
-//         }
+    grammar_ptr = grammar;
+    while (grammar_ptr != NULL)
+    {
+        // Adding the non terminal to the non terminal linked list
+        sll_append(nonTerminals, grammar_ptr->nonTerminal, 0);
 
-//         grammar_ptr = grammar_ptr->next;
-//     }
-// }
+        // Adding the terminals to the terminals list
+        sll_ptr = grammar_ptr->sll;
+        while (sll_ptr != NULL)
+        {
+            for (size_t i = 0; i < strlen(sll_ptr->string); i++)
+            {
+                if (sll_ptr->string[i] == '@')
+                {
+                    continue;
+                }
 
+                buffer[0] = sll_ptr->string[i];
+
+                isNonTerminalFlag = isNonTerminal(grammar, buffer);
+                if (isNonTerminalFlag == 0)
+                {
+                    sll_append(terminals, buffer, 0);
+                }
+            }
+
+            sll_ptr = sll_ptr->next;
+        }
+
+        grammar_ptr = grammar_ptr->next;
+    }
+}
 
 void find_terminal(Grammar grammar, char *buffer, int level, char *terminal)
 {
@@ -53,6 +67,7 @@ LL1PT ll1pt_constructor(Grammar grammar, First first, Follow follow)
     BaseNode *node_adr;     // Flag used to hold an adress of BaseNode
     SLL sll_node_ptr;
     LL1PT ll1pt; // The head of the LL1 parsing table linked list
+    LL1PT ll1pt_ptr;
     SLL ll1pt_sll;
     Follow follow_ptr;
     int isNonTerminalFlag, index;
@@ -73,8 +88,22 @@ LL1PT ll1pt_constructor(Grammar grammar, First first, Follow follow)
 
     ll1pt = NULL;
     grammar_ptr = grammar;
+    // ll1pt = (LL1PT)malloc(sizeof(LL1PTRow)); // Allocating the memory for the head of the linked list
+    // ll1pt_ptr = ll1pt;
     while (grammar_ptr != NULL)
     {
+        // Setting the LL1PT
+        if (ll1pt == NULL)
+        {
+            ll1pt = (LL1PT)malloc(sizeof(LL1PTRow));
+            ll1pt_ptr = ll1pt;
+        }
+        else
+        {
+            ll1pt_ptr->next = (LL1PT)malloc(sizeof(LL1PTRow));
+            ll1pt_ptr = ll1pt_ptr->next;
+        }
+
         // Init the sll for the current nonTerminal
         ll1pt_sll = NULL;
         track_list = NULL;
@@ -114,7 +143,6 @@ LL1PT ll1pt_constructor(Grammar grammar, First first, Follow follow)
                     // Lopping through the follow of that nonTerminal @-> each one of them
                     // concat(&ll1pt_sll, , 0);
                     size = sll_length(followOfCurrent->sll);
-                    printf("\nsize follow: %d\n", size);
                     for (size_t i = 0; i < size; i++)
                     {
                         sll_append(&ll1pt_sll, production_rule->string, 1);
@@ -128,7 +156,6 @@ LL1PT ll1pt_constructor(Grammar grammar, First first, Follow follow)
                 // The character is non terminal
                 // Adding the produnction rule multiple times
                 size = sll_length(firstOfCurrent->sll);
-                printf("\nsize first: %d\n", size);
                 for (size_t i = 0; i < size; i++)
                 {
                     sll_append(&ll1pt_sll, production_rule->string, 1);
@@ -138,15 +165,106 @@ LL1PT ll1pt_constructor(Grammar grammar, First first, Follow follow)
             production_rule = production_rule->next;
         }
 
-        printf("\nDEBUG\n");
-        printf("Non terminal: %s\n", grammar_ptr->nonTerminal);
-        printf("Keys: ");
-        display_sll(track_list);
-        printf("\n");
-        printf("PR: ");
-        display_sll(ll1pt_sll);
-        scanf("%c", &c);
+        // printf("\nDEBUG\n");
+        // printf("Non terminal: %s\n", grammar_ptr->nonTerminal);
+        // printf("Keys: ");
+        // display_sll(track_list);
+        // printf("\n");
+        // printf("PR: ");
+        // display_sll(ll1pt_sll);
+        // scanf("%c", &c);
+
+        ll1pt_ptr->nonTerminal = (char *)malloc(strlen(grammar_ptr->nonTerminal) * sizeof(char));
+        strcpy(ll1pt_ptr->nonTerminal, grammar_ptr->nonTerminal);
+
+        ll1pt_ptr->keys = track_list;
+        ll1pt_ptr->values = ll1pt_sll;
 
         grammar_ptr = grammar_ptr->next;
+    }
+
+    ll1pt_ptr->next = NULL;
+
+    return ll1pt;
+}
+
+char *get_key_value_pair(LL1PT ll1pt, char *key)
+{
+    SLL sll_keys_ptr;
+    SLL sll_values_ptr;
+
+    char *value = NULL;
+
+    sll_keys_ptr = ll1pt->keys;
+    sll_values_ptr = ll1pt->values;
+    while (sll_keys_ptr != NULL && sll_values_ptr != NULL)
+    {
+        if (strcmp(sll_keys_ptr->string, key) == 0)
+        {
+            value = (char *)malloc(strlen(sll_values_ptr->string) * sizeof(char));
+            strcpy(value, sll_values_ptr->string);
+            break;
+        }
+        sll_keys_ptr = sll_keys_ptr->next;
+        sll_values_ptr = sll_values_ptr->next;
+    }
+
+    return value;
+}
+
+void display_ll1pt(LL1PT ll1pt, Grammar grammar)
+{
+    SLL terminals, nonTerminals;
+    SLL sll_ptr;
+    LL1PT ll1pt_ptr;
+    char *value;
+
+    split(grammar, &terminals, &nonTerminals);
+
+    // Display the LL1 Table header
+    printf("\n");
+    printf("=====================================================================================================================");
+    printf("\n");
+    printf("                     |\t\t\t\t\t  Terminal Symbols  \t\t");
+    printf("\n");    
+    printf("=====================================================================================================================");
+    printf("\n");
+
+    printf("Non Terminal Symbols |\t");
+    sll_ptr = terminals;
+    while (sll_ptr != NULL)
+    {
+        printf("\t %s \t", sll_ptr->string);
+        sll_ptr = sll_ptr->next;
+    }
+    printf("\n");
+    printf("=====================================================================================================================");
+    printf("\n");
+
+    ll1pt_ptr = ll1pt;
+    while (ll1pt_ptr != NULL)
+    {
+        printf("\t%s\t\t", ll1pt_ptr->nonTerminal);
+
+        sll_ptr = terminals;
+        while (sll_ptr != NULL)
+        {
+            value = get_key_value_pair(ll1pt_ptr, sll_ptr->string);
+            if (value == NULL)
+            {
+                printf("\t  \t");
+            }
+            else
+            {
+                printf("\t%s->%s\t", ll1pt_ptr->nonTerminal, value);
+            }
+
+            sll_ptr = sll_ptr->next;
+        }
+        printf("\n");
+        printf("=====================================================================================================================");
+        printf("\n");
+
+        ll1pt_ptr = ll1pt_ptr->next;
     }
 }

@@ -23,6 +23,16 @@ typedef struct BaseNode
 typedef BaseNode *Grammar;
 typedef BaseNode *First;
 typedef BaseNode *Follow;
-typedef BaseNode *LL1PT;
+// typedef BaseNode *LL1PT;
+
+typedef struct LL1PTRow
+{
+    char *nonTerminal;
+    SLL keys;
+    SLL values;
+    struct LL1PTRow *next;
+} LL1PTRow;
+
+typedef LL1PTRow *LL1PT;
 
 #endif
