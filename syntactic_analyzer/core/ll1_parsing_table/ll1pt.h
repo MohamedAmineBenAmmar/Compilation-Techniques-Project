@@ -5,5 +5,6 @@
 
 LL1PT ll1pt_constructor(Grammar grammar, First first, Follow follow);
 void display_ll1pt(LL1PT ll1pt, Grammar grammar);
+// void exploit_t
 
 #endif
