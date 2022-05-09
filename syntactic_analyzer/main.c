@@ -3,6 +3,7 @@
 #include "config/functions_prototypes.h"
 #include "core/first/first.h"
 #include "core/follow/follow.h"
+#include "core/ll1_parsing_table/ll1pt.h"
 
 int main(int argc, char **argv)
 {
@@ -28,6 +29,9 @@ int main(int argc, char **argv)
     printf("Follow:\n");
     display(follow);
     printf("\n");
+
+    // Display LL1 table skeleton
+    ll1pt_constructor(grammar, first, follow);
 
     return 0;
 }

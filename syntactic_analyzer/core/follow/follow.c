@@ -50,7 +50,7 @@ void followOf(char nonTerminal, Grammar g, SLL *followOfArg, Follow f, First fst
                         {
                             // Append the node_adr->sll (which represents the follow of the current production rule) to the follow of
                             // of the nonTerminal that we are calculating its follow
-                            concat(followOfArg, node_adr->sll, 0);
+                            concat(followOfArg, node_adr->sll, 0, 0);
                         }
                     }
                 }
@@ -62,7 +62,7 @@ void followOf(char nonTerminal, Grammar g, SLL *followOfArg, Follow f, First fst
                     if (isNonTerminalFlag == 0)
                     {
                         // The character is a terminal character (take the character as it is)                        
-                        sll_append(followOfArg, buffer);
+                        sll_append(followOfArg, buffer, 0);
                     }
                     else
                     {
@@ -75,11 +75,11 @@ void followOf(char nonTerminal, Grammar g, SLL *followOfArg, Follow f, First fst
 
                         if (sll_node_adr == NULL)
                         {
-                            concat(followOfArg, node_adr->sll, 0);
+                            concat(followOfArg, node_adr->sll, 0, 0);
                         }
                         else
                         {
-                            concat(followOfArg, node_adr->sll, 1); // Don't allow epsilon to be added to the follow of our nonTerminal
+                            concat(followOfArg, node_adr->sll, 1, 0); // Don't allow epsilon to be added to the follow of our nonTerminal
                             index++;
                             goto check_point;
                         }
@@ -113,7 +113,7 @@ Follow follow_calculation(Grammar g, First fst)
         follow_sll = NULL;        
         // Adding dollar to the follow to first production rule
         if(head_flag == 1){
-            sll_append(&follow_sll, buffer);
+            sll_append(&follow_sll, buffer, 0);
             head_flag = 0;            
         }
 

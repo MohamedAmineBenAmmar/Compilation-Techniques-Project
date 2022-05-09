@@ -52,6 +52,21 @@ BaseNode *find(BaseNode *head, char *nonTerminal)
     return node_adr;
 }
 
+int sll_length(SLL head)
+{
+    int length = 0;
+    SLL ptr;
+
+    ptr = head;
+    while (ptr != NULL)
+    {
+        length++;
+        ptr = ptr->next;
+    }
+
+    return length;
+}
+
 SLL sll_find(SLL head, char *string)
 {
     SLL node_adr, ptr;
@@ -118,19 +133,20 @@ void display_sll(SLL head)
     ptr = head;
     while (ptr != NULL)
     {
-        printf("%s: %d  ", ptr->string, strlen(ptr->string));
+        // printf("%s: %d  ", ptr->string, strlen(ptr->string));
+        printf("%s  ", ptr->string);
         ptr = ptr->next;
     }
 
     printf("\n");
 }
 
-void sll_append(SLL *head, char *string)
+void sll_append(SLL *head, char *string, int allow_duplicate_values)
 {
     SLL ptr, new_node, node_adr;
 
     node_adr = sll_find(*head, string);
-    if (node_adr == NULL)
+    if (node_adr == NULL || allow_duplicate_values == 1)
     {
         new_node = (SLL)malloc(sizeof(StringLinkedListNode));
 
@@ -155,7 +171,7 @@ void sll_append(SLL *head, char *string)
     }
 }
 
-void concat(SLL *dest, SLL src, int epsilon_flag)
+void concat(SLL *dest, SLL src, int epsilon_flag, int allow_duplicate_values)
 {
     SLL sll_ptr;
 
@@ -164,7 +180,7 @@ void concat(SLL *dest, SLL src, int epsilon_flag)
     {
         if (!((epsilon_flag == 1) && (sll_ptr->string[0] == '@')))
         {
-            sll_append(dest, sll_ptr->string);
+            sll_append(dest, sll_ptr->string, allow_duplicate_values);
         }
 
         sll_ptr = sll_ptr->next;

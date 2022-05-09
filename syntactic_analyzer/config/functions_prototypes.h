@@ -7,12 +7,14 @@
 void display(BaseNode* head);
 void append(BaseNode **head, char *nonTerminal, SLL sll);
 BaseNode *find(BaseNode *head, char *nonTerminal);
+int sll_length(SLL head);
 
 // SLL functions
 SLL sll_constructor();
-void sll_append(SLL *head, char *string);
+void sll_append(SLL *head, char *string, int allow_duplicate_values);
 SLL sll_find(SLL head, char *string);
-void concat(SLL *dest, SLL src, int epsilon_flag);
+void concat(SLL *dest, SLL src, int epsilon_flag, int allow_duplicate_values);
+void display_sll(SLL head);
 
 // Helper functions
 int isNonTerminal(Grammar g, char *string);

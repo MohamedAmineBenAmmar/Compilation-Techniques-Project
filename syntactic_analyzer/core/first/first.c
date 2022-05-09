@@ -40,7 +40,7 @@ void firstOf(Grammar main_node, Grammar secondary_node, Grammar g, SLL *firstOfA
                 sll_flag = sll_find(*firstOfArg, buffer);
                 if (sll_flag == NULL)
                 {
-                    sll_append(firstOfArg, buffer);
+                    sll_append(firstOfArg, buffer, 0);
                 }
             }
             else if ((main_node != secondary_node) && (buffer[0] != '@'))
@@ -48,7 +48,7 @@ void firstOf(Grammar main_node, Grammar secondary_node, Grammar g, SLL *firstOfA
                 sll_flag = sll_find(*firstOfArg, buffer);
                 if (sll_flag == NULL)
                 {
-                    sll_append(firstOfArg, buffer);
+                    sll_append(firstOfArg, buffer, 0);
                 }
             }
             else if ((main_node != secondary_node) && (buffer[0] == '@'))

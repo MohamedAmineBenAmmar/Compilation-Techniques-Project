@@ -23,21 +23,6 @@ typedef struct BaseNode
 typedef BaseNode *Grammar;
 typedef BaseNode *First;
 typedef BaseNode *Follow;
-
-// Define the structure for the LL1 parsing table
-typedef struct LL1PTCols
-{
-    SLL terminals;
-    SLL production_rules;    
-} LL1PTCols;
-
-typedef struct LL1PTRow
-{
-    char *nonTerminal;
-    LL1PTCols cols;
-    struct LL1PTRow *next;
-} LL1PTRow;
-
-typedef LL1PTRow *LL1PT;
+typedef BaseNode *LL1PT;
 
 #endif
