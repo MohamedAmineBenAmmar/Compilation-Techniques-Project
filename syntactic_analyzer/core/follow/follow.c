@@ -61,7 +61,7 @@ void followOf(char nonTerminal, Grammar g, SLL *followOfArg, Follow f, First fst
                     isNonTerminalFlag = isNonTerminal(g, buffer);
                     if (isNonTerminalFlag == 0)
                     {
-                        // The character is a terminal character (take the character as it is)
+                        // The character is a terminal character (take the character as it is)                        
                         sll_append(followOfArg, buffer);
                     }
                     else

@@ -111,30 +111,47 @@ SLL sll_constructor()
     return head;
 }
 
+void display_sll(SLL head)
+{
+    SLL ptr;
+
+    ptr = head;
+    while (ptr != NULL)
+    {
+        printf("%s: %d  ", ptr->string, strlen(ptr->string));
+        ptr = ptr->next;
+    }
+
+    printf("\n");
+}
+
 void sll_append(SLL *head, char *string)
 {
-    SLL ptr, new_node;
+    SLL ptr, new_node, node_adr;
 
-    new_node = (SLL)malloc(sizeof(StringLinkedListNode));
-
-    new_node->string = (char *)malloc(strlen(string) * sizeof(char));
-    strcpy(new_node->string, string);
-
-    new_node->next = NULL;
-
-    if (*head == NULL)
+    node_adr = sll_find(*head, string);
+    if (node_adr == NULL)
     {
-        *head = new_node;
-    }
-    else
-    {
-        ptr = *head;
-        while (ptr->next != NULL)
+        new_node = (SLL)malloc(sizeof(StringLinkedListNode));
+
+        new_node->string = (char *)malloc(strlen(string) * sizeof(char));
+        strcpy(new_node->string, string);
+        new_node->next = NULL;
+
+        if (*head == NULL)
         {
-            ptr = ptr->next;
+            *head = new_node;
         }
+        else
+        {
+            ptr = *head;
+            while (ptr->next != NULL)
+            {
+                ptr = ptr->next;
+            }
 
-        ptr->next = new_node;
+            ptr->next = new_node;
+        }
     }
 }
 
