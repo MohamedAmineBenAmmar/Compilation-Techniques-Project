@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 
     // Display LL1 table skeleton
     ll1pt = ll1pt_constructor(grammar, first, follow);
-
+    printf("LL1 Parsing Table:\n");
     display_ll1pt(ll1pt, grammar);
 
     return 0;
