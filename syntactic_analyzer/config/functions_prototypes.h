@@ -12,6 +12,7 @@ BaseNode *find(BaseNode *head, char *nonTerminal);
 SLL sll_constructor();
 void sll_append(SLL *head, char *string);
 SLL sll_find(SLL head, char *string);
+void concat(SLL *dest, SLL src, int epsilon_flag);
 
 // Helper functions
 int isNonTerminal(Grammar g, char *string);

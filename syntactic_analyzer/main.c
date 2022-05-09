@@ -2,6 +2,7 @@
 #include "converter/converter.h"
 #include "config/functions_prototypes.h"
 #include "core/first/first.h"
+#include "core/follow/follow.h"
 
 int main(int argc, char **argv)
 {
@@ -20,6 +21,12 @@ int main(int argc, char **argv)
     first = first_calculation(grammar);
     printf("First:\n");
     display(first);
+    printf("\n");
+
+    // Display the follow
+    follow = follow_calculation(grammar, first);
+    printf("Follow:\n");
+    display(follow);
     printf("\n");
 
     return 0;

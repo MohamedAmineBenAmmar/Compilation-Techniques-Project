@@ -138,6 +138,22 @@ void sll_append(SLL *head, char *string)
     }
 }
 
+void concat(SLL *dest, SLL src, int epsilon_flag)
+{
+    SLL sll_ptr;
+
+    sll_ptr = src;
+    while (sll_ptr != NULL)
+    {
+        if (!((epsilon_flag == 1) && (sll_ptr->string[0] == '@')))
+        {
+            sll_append(dest, sll_ptr->string);
+        }
+
+        sll_ptr = sll_ptr->next;
+    }
+}
+
 int isNonTerminal(Grammar g, char *string)
 {
     int result = 0;
