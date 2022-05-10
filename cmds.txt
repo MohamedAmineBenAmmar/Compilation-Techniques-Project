@@ -1,2 +1,5 @@
 ./lexical_analyzer/main.exe tests/src_code_examples/test1.txt
 ./syntactic_analyzer/main.exe syntactic_analyzer/tmp/grammars/grammar1.txt
+
+gcc ./syntactic_analyzer/test.c -o syntactic_analyzer/test
+./syntactic_analyzer/test.exe

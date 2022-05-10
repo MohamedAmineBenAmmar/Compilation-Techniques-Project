@@ -5,6 +5,9 @@
 #include "core/follow/follow.h"
 #include "core/ll1_parsing_table/ll1pt.h"
 
+#include <string.h>
+
+
 int main(int argc, char **argv)
 {
     // Extracting the grammar from the tmp folder
@@ -36,5 +39,6 @@ int main(int argc, char **argv)
     printf("LL1 Parsing Table:\n");
     display_ll1pt(ll1pt, grammar);
 
+  
     return 0;
 }

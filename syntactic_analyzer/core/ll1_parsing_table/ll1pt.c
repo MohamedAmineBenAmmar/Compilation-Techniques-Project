@@ -50,11 +50,119 @@ void split(Grammar grammar, SLL *terminals, SLL *nonTerminals)
     }
 }
 
-void find_terminal(Grammar grammar, char *buffer, int level, char *terminal)
+void jumpBy(char *string, int n)
 {
-    Grammar node_adr;
+    for (int i = strlen(string); i >= 0; i--)
+    {
+        string[i + n] = string[i];
+    }
 
-    node_adr = find(grammar, buffer);
+    // string[0] = (char)(((int)string[1]) + 1);
+}
+
+void strSetAt(char *src, char *dest, int pos)
+{
+    int j = pos;
+    for (size_t i = 0; i < strlen(src); i++)
+    {
+        dest[j] = src[i];
+        j++;
+    }
+}
+
+void find_production_rule(Grammar grammar,
+                          char *production_rule, char *target_terminal,
+                          int *rec_call_flag, int *epsilon_flag,
+                          int rec_call_track)
+{
+    Grammar grammar_node;
+    SLL sll_ptr;
+
+    char local_large_buffer[256];
+    local_large_buffer[0] = '\0';
+    int index;
+    index = 0;
+
+    int isNonTerminalFlag;
+    char buffer[2];
+    buffer[0] = ' ';
+    buffer[1] = '\0';
+
+    strcpy(local_large_buffer, production_rule);
+
+non_terminal_selection:
+    buffer[0] = local_large_buffer[index];
+    grammar_node = find(grammar, buffer);
+
+    // Looping through the nonTerminal production rules
+    sll_ptr = grammar_node->sll;
+    while (sll_ptr != NULL)
+    {
+        buffer[0] = sll_ptr->string[0];
+        isNonTerminalFlag = isNonTerminal(grammar, buffer);
+        if (isNonTerminalFlag == 0)
+        {
+            // We get a terminal character
+            // We must test if its the epsilon character or not
+            if (buffer[0] == '@')
+            {
+                // Setting a flag variable to notify the recursive calls in the stack that
+                // the current recursive finds an epsilon character
+                // that will be substituted
+                *epsilon_flag = 1;
+                if (rec_call_track == 1)
+                {
+                    break;
+                }
+                else
+                {
+                    goto epsilon_check;
+                }
+            }
+            else
+            {
+                if (strcmp(buffer, target_terminal) == 0)
+                {
+                    *rec_call_flag = 1; // Here we found the terminal needed (our target)
+                    break;              // We must stop the other recursive calls that are waiting in the stack
+                }
+            }
+        }
+        else
+        {
+            // We get a nonTerminal character
+            // Substiute the non terminal at the start of the production rule by the production rule that we got
+            jumpBy(local_large_buffer, strlen(sll_ptr->string) - 1);
+            strSetAt(sll_ptr->string, local_large_buffer, 0);
+
+            // Making the recursive call
+            find_production_rule(grammar, local_large_buffer, target_terminal, rec_call_flag, epsilon_flag, 1);
+
+        epsilon_check:
+            // Check if we hit an epslilon character or we did find the target terminal
+            if (*epsilon_flag == 1)
+            {
+                *epsilon_flag = 0;
+                if ((index + 1) < strlen(local_large_buffer))
+                {
+                    buffer[0] = local_large_buffer[index + 1];
+                    if (isNonTerminal(grammar, buffer) == 1)
+                    {
+                        index++;
+                        goto non_terminal_selection;
+                    }
+                }
+            }
+
+            // Check if we find the non terminal target
+            if (*rec_call_flag == 1)
+            {
+                break;
+            }
+        }
+
+        sll_ptr = sll_ptr->next;
+    }
 }
 
 LL1PT ll1pt_constructor(Grammar grammar, First first, Follow follow)
@@ -75,6 +183,7 @@ LL1PT ll1pt_constructor(Grammar grammar, First first, Follow follow)
     char *correspond_terminal;
     int level;
     int size;
+    int rec_call_flag, epsilon_flag;
 
     char c;
 
@@ -155,12 +264,21 @@ LL1PT ll1pt_constructor(Grammar grammar, First first, Follow follow)
             {
                 // The character is non terminal
                 // Adding the produnction rule multiple times
-                size = sll_length(firstOfCurrent->sll);
-                for (size_t i = 0; i < size; i++)
+                sll_node_ptr = firstOfCurrent->sll;
+                while (sll_node_ptr != NULL)
                 {
-                    sll_append(&ll1pt_sll, production_rule->string, 1);
+                    // Init all the variables needed by our recursive function
+                    rec_call_flag = 0;
+                    epsilon_flag = 0;
+                    find_production_rule(grammar, production_rule->string, sll_node_ptr->string, &rec_call_flag, &epsilon_flag, 0);
+
+                    if (rec_call_flag == 1)
+                    {
+                        sll_append(&ll1pt_sll, production_rule->string, 1);
+                        sll_append(&track_list, sll_node_ptr->string, 0);
+                    }
+                    sll_node_ptr = sll_node_ptr->next;
                 }
-                concat(&track_list, firstOfCurrent->sll, 0, 0);
             }
             production_rule = production_rule->next;
         }
@@ -226,7 +344,7 @@ void display_ll1pt(LL1PT ll1pt, Grammar grammar)
     printf("=====================================================================================================================");
     printf("\n");
     printf("                     |\t\t\t\t\t  Terminal Symbols  \t\t");
-    printf("\n");    
+    printf("\n");
     printf("=====================================================================================================================");
     printf("\n");
 
