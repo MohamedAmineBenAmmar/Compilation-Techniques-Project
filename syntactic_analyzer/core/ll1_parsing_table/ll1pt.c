@@ -337,7 +337,12 @@ void display_ll1pt(LL1PT ll1pt, Grammar grammar)
     LL1PT ll1pt_ptr;
     char *value;
 
+    char dollar[2];
+    dollar[0] = '$';
+    dollar[1] = '\0';
+
     split(grammar, &terminals, &nonTerminals);
+    sll_append(&terminals, dollar, 0);
 
     // Display the LL1 Table header
     printf("\n");

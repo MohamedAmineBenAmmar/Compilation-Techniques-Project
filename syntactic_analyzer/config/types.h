@@ -11,6 +11,7 @@ typedef struct StringLinkedListNode
 } StringLinkedListNode;
 
 typedef StringLinkedListNode *SLL;
+typedef StringLinkedListNode *StringStack;
 
 // Type definition of BaseNode, this type presents an abstraction of an Grammar, Follow, First types
 typedef struct BaseNode
@@ -34,5 +35,7 @@ typedef struct LL1PTRow
 } LL1PTRow;
 
 typedef LL1PTRow *LL1PT;
+
+
 
 #endif

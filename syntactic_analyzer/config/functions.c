@@ -205,3 +205,50 @@ int isNonTerminal(Grammar g, char *string)
 
     return result;
 }
+
+// Developing the stack functions methods
+StringStack push(StringStack head, char *string)
+{
+    StringStack new_node;
+
+    new_node = (StringStack)malloc(sizeof(StringLinkedListNode));
+    new_node->string = (char *)malloc(strlen(string) * sizeof(char));
+    strcpy(new_node->string, string);
+    new_node->next = head;
+
+    return new_node;
+}
+
+StringStack pop(StringStack head)
+{
+    StringStack ptr;
+
+    ptr = head->next;
+    free(head->string);
+    free(head);
+    return ptr;
+}
+
+char *peek(StringStack head)
+{
+    if (head == NULL)
+    {
+        return NULL;
+    }
+    else
+    {
+        return head->string;
+    }
+}
+
+int empty(StringStack head)
+{
+    if (head == NULL)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
