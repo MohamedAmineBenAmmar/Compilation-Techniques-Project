@@ -333,12 +333,13 @@ char *get_key_value_pair(LL1PT ll1pt, char *key)
 void exploit_ll1pt(LL1PT ll1pt, char *word)
 {
     StringStack stack = NULL, input = NULL, output = NULL;
-   
+    char stack_item[256];
+    char input_item[256];
+
     // Init
     stack = push(stack, ll1pt->nonTerminal);
-    
-    input = setInputStack(input, word);
 
+    input = setInputStack(input, word);
 
     // Displaying the fist line of the stack
     printf("Stack \t\tInput\t\t Output\n");
@@ -347,6 +348,12 @@ void exploit_ll1pt(LL1PT ll1pt, char *word)
     print_stack(input);
     printf("    ");
     printf("\t\t");
+
+    // Displaying the table content
+    // while (empty(stack) == 0 && empty(input) == 0)
+    // {
+        
+    // }
 }
 
 void display_ll1pt(LL1PT ll1pt, Grammar grammar)
