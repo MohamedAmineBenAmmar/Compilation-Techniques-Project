@@ -330,6 +330,25 @@ char *get_key_value_pair(LL1PT ll1pt, char *key)
     return value;
 }
 
+void exploit_ll1pt(LL1PT ll1pt, char *word)
+{
+    StringStack stack = NULL, input = NULL, output = NULL;
+   
+    // Init
+    stack = push(stack, ll1pt->nonTerminal);
+    
+    input = setInputStack(input, word);
+
+
+    // Displaying the fist line of the stack
+    printf("Stack \t\tInput\t\t Output\n");
+    print_stack(stack);
+    printf("\t\t");
+    print_stack(input);
+    printf("    ");
+    printf("\t\t");
+}
+
 void display_ll1pt(LL1PT ll1pt, Grammar grammar)
 {
     SLL terminals, nonTerminals;

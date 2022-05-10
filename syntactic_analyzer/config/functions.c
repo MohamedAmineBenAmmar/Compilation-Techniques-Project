@@ -252,3 +252,30 @@ int empty(StringStack head)
         return 0;
     }
 }
+
+void print_stack(StringStack head)
+{
+    StringStack ptr = head;
+    while (ptr != NULL)
+    {
+        printf("%s ", ptr->string);
+        ptr = ptr->next;
+    }
+    
+}
+
+StringStack setInputStack(StringStack head, char *word)
+{
+    StringStack new_head = head;
+    char buffer[2];
+    buffer[0] = ' ';
+    buffer[1] = '\0';
+
+    for (int i = (strlen(word) - 1); i >= 0; i--)
+    {
+        buffer[0] = word[i];
+        new_head = push(new_head, buffer);
+    }
+
+    return new_head;
+}

@@ -7,7 +7,6 @@
 
 #include <string.h>
 
-
 int main(int argc, char **argv)
 {
     // Extracting the grammar from the tmp folder
@@ -15,6 +14,7 @@ int main(int argc, char **argv)
     First first;
     Follow follow;
     LL1PT ll1pt;
+    char input[50];
 
     // Display the Grammar
     grammar = convert(argv[1]);
@@ -38,7 +38,14 @@ int main(int argc, char **argv)
     ll1pt = ll1pt_constructor(grammar, first, follow);
     printf("LL1 Parsing Table:\n");
     display_ll1pt(ll1pt, grammar);
+    printf("\n\n");
 
-  
+    // Display LL1 table manipulation
+    printf("LL1 Parsing Table Manipulation:\n");
+    printf("Type a word: ");
+    scanf("%s", input);
+    printf("\n");
+    exploit_ll1pt(ll1pt, input);
+
     return 0;
 }

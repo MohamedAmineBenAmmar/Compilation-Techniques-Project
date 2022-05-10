@@ -19,4 +19,13 @@ void display_sll(SLL head);
 // Helper functions
 int isNonTerminal(Grammar g, char *string);
 
+// Stack functions
+StringStack push(StringStack head, char *string);
+StringStack pop(StringStack head);
+char *peek(StringStack head);
+int empty(StringStack head);
+void print_stack(StringStack head);
+
+StringStack setInputStack(StringStack head, char *word);
+
 #endif
