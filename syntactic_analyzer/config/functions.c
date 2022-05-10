@@ -264,7 +264,7 @@ void print_stack(StringStack head)
     
 }
 
-StringStack setInputStack(StringStack head, char *word)
+StringStack bulk_push(StringStack head, char *word)
 {
     StringStack new_head = head;
     char buffer[2];

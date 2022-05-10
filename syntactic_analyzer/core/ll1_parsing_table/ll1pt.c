@@ -306,6 +306,26 @@ LL1PT ll1pt_constructor(Grammar grammar, First first, Follow follow)
     return ll1pt;
 }
 
+LL1PT find_ll1pt_row(LL1PT ll1pt, char *nonTerminal)
+{
+    LL1PT ptr, node_adr;
+
+    node_adr = NULL;
+    ptr = ll1pt;
+    while (ptr != NULL)
+    {
+        if (strcmp(ptr->nonTerminal, nonTerminal) == 0)
+        {
+            node_adr = ptr;
+            break;
+        }
+
+        ptr = ptr->next;
+    }
+
+    return node_adr;
+}
+
 char *get_key_value_pair(LL1PT ll1pt, char *key)
 {
     SLL sll_keys_ptr;
@@ -330,16 +350,19 @@ char *get_key_value_pair(LL1PT ll1pt, char *key)
     return value;
 }
 
-void exploit_ll1pt(LL1PT ll1pt, char *word)
+void exploit_ll1pt(LL1PT ll1pt, Grammar grammar, char *word)
 {
     StringStack stack = NULL, input = NULL, output = NULL;
-    char stack_item[256];
-    char input_item[256];
+    LL1PT ll1pt_row;
+    char stack_item[2];
+    char input_item[2];
+    char *value;
+    int isNonTerminalFlag;
 
     // Init
     stack = push(stack, ll1pt->nonTerminal);
+    input = bulk_push(input, word);
 
-    input = setInputStack(input, word);
 
     // Displaying the fist line of the stack
     printf("Stack \t\tInput\t\t Output\n");
@@ -350,10 +373,29 @@ void exploit_ll1pt(LL1PT ll1pt, char *word)
     printf("\t\t");
 
     // Displaying the table content
-    // while (empty(stack) == 0 && empty(input) == 0)
-    // {
-        
-    // }
+    while (empty(stack) == 0 && empty(input) == 0)
+    {
+        strcpy(stack_item, peek(stack));
+        strcpy(input_item, peek(input));
+
+        isNonTerminalFlag = isNonTerminal(grammar, stack_item);
+        if (isNonTerminalFlag == 1)
+        {
+            ll1pt_row = find_ll1pt_row(ll1pt, stack_item);
+            value = get_key_value_pair(ll1pt_row, input_item);
+            if(value == NULL){
+                // Word matjiche ....
+            } else {
+               stack = pop(stack);
+               stack = bulk_push(stack, value);
+            }
+        }
+        else
+        {
+            // The character is terminal
+            // to be continued ...
+        }
+    }
 }
 
 void display_ll1pt(LL1PT ll1pt, Grammar grammar)

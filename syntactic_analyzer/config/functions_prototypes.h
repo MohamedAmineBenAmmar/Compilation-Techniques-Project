@@ -26,6 +26,6 @@ char *peek(StringStack head);
 int empty(StringStack head);
 void print_stack(StringStack head);
 
-StringStack setInputStack(StringStack head, char *word);
+StringStack bulk_push(StringStack head, char *word);
 
 #endif
