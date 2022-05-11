@@ -352,11 +352,15 @@ char *get_key_value_pair(LL1PT ll1pt, char *key)
 
 void print_ll1pt_exploitation_row(StringStack stack, StringStack input, char *production_rule)
 {
+    printf("\t\t");
     print_stack(stack);
     printf("\t\t\t");
     print_stack(input);
-    printf("\t\t\t");
+    printf("\t\t\t ");
     printf("%s", production_rule);
+    printf("\t\t");
+    printf("\n");
+    printf("------------------------------------------------------------------------------------");
     printf("\n");
 }
 
@@ -368,6 +372,7 @@ void exploit_ll1pt(LL1PT ll1pt, Grammar grammar, char *word)
     char input_item[2];
     char *value;
     int isNonTerminalFlag;
+    int status = 1;
     char production_rule[256];
     char derivation_arrow[] = "->";
     char lastNonTerminal[2];
@@ -385,7 +390,14 @@ void exploit_ll1pt(LL1PT ll1pt, Grammar grammar, char *word)
     input = bulk_push(input, word);
 
     // Displaying the fist line of the stack
-    printf("Stack \t\t\tInput\t\t\t Output\n");
+    printf("\n");
+    printf("=====================================================================================");
+    printf("\n");
+    printf("\t\tStack \t\t\tInput\t\t\t Output\t\t");
+    printf("\n");
+    printf("=====================================================================================");
+    printf("\n");
+
     production_rule[0] = '\0';
     print_ll1pt_exploitation_row(stack, input, production_rule);
 
@@ -403,7 +415,8 @@ void exploit_ll1pt(LL1PT ll1pt, Grammar grammar, char *word)
             value = get_key_value_pair(ll1pt_row, input_item);
             if (value == NULL)
             {
-                printf("Error");
+                // printf("Error");
+                status = 0;
                 break;
             }
             else
@@ -447,13 +460,26 @@ void exploit_ll1pt(LL1PT ll1pt, Grammar grammar, char *word)
                 }
                 else
                 {
-                    printf("Error");
+                    // printf("Error");
+                    status = 0;
                     break;
                 }
             }
         }
 
     }
+
+    printf("\n");
+    printf("==> ");
+    if(status == 0){
+        printf("Error occured word is not accepted !!!");
+        printf("\n");
+    } else {
+        printf("Success, word accepted.");
+        printf("\n");
+    }
+    printf("====================================================================================");
+    printf("\n");
 }
 
 void display_ll1pt(LL1PT ll1pt, Grammar grammar)
