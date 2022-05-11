@@ -1,6 +1,5 @@
-compile: syntactic_analyzer_main_executable
+compile: syntactic_analyzer_main_executable lexical_analyzer_main_executable
 	echo "Compilation done successfully"
-
 
 
 syntactic_analyzer_main_executable: syn_main.o syn_functions.o syn_converter.o first.o follow.o ll1pt.o
