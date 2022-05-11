@@ -45,7 +45,7 @@ int main(int argc, char **argv)
     printf("Type a word: ");
     scanf("%s", input);
     printf("\n");
-    // exploit_ll1pt(ll1pt, grammar, input);
+    exploit_ll1pt(ll1pt, grammar, input);
 
     return 0;
 }

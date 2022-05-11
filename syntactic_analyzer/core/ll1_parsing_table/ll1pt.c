@@ -350,6 +350,16 @@ char *get_key_value_pair(LL1PT ll1pt, char *key)
     return value;
 }
 
+void print_ll1pt_exploitation_row(StringStack stack, StringStack input, char *production_rule)
+{
+    print_stack(stack);
+    printf("\t\t\t");
+    print_stack(input);
+    printf("\t\t\t");
+    printf("%s", production_rule);
+    printf("\n");
+}
+
 void exploit_ll1pt(LL1PT ll1pt, Grammar grammar, char *word)
 {
     StringStack stack = NULL, input = NULL, output = NULL;
@@ -358,43 +368,91 @@ void exploit_ll1pt(LL1PT ll1pt, Grammar grammar, char *word)
     char input_item[2];
     char *value;
     int isNonTerminalFlag;
+    char production_rule[256];
+    char derivation_arrow[] = "->";
+    char lastNonTerminal[2];
+    lastNonTerminal[0] = ' ';
+    lastNonTerminal[1] = '\0';
+    char dollar[2];
+    dollar[0] = '$';
+    dollar[1] = '\0';
 
     // Init
+    input = push(input, dollar);
+    stack = push(stack, dollar);
+
     stack = push(stack, ll1pt->nonTerminal);
     input = bulk_push(input, word);
 
-
     // Displaying the fist line of the stack
-    printf("Stack \t\tInput\t\t Output\n");
-    print_stack(stack);
-    printf("\t\t");
-    print_stack(input);
-    printf("    ");
-    printf("\t\t");
+    printf("Stack \t\t\tInput\t\t\t Output\n");
+    production_rule[0] = '\0';
+    print_ll1pt_exploitation_row(stack, input, production_rule);
 
     // Displaying the table content
     while (empty(stack) == 0 && empty(input) == 0)
     {
         strcpy(stack_item, peek(stack));
         strcpy(input_item, peek(input));
+        production_rule[0] = '\0';
 
         isNonTerminalFlag = isNonTerminal(grammar, stack_item);
         if (isNonTerminalFlag == 1)
         {
             ll1pt_row = find_ll1pt_row(ll1pt, stack_item);
             value = get_key_value_pair(ll1pt_row, input_item);
-            if(value == NULL){
-                // Word matjiche ....
-            } else {
-               stack = pop(stack);
-               stack = bulk_push(stack, value);
+            if (value == NULL)
+            {
+                printf("Error");
+                break;
             }
+            else
+            {
+                stack = pop(stack);
+                stack = bulk_push(stack, value);
+
+                strcat(production_rule, stack_item);
+                strcat(production_rule, derivation_arrow);
+                strcat(production_rule, value);
+
+                print_ll1pt_exploitation_row(stack, input, production_rule);
+            }
+
+            strcpy(lastNonTerminal, stack_item);
         }
         else
         {
-            // The character is terminal
-            // to be continued ...
+            if (stack_item[0] == '@')
+            {
+                stack = pop(stack);
+
+                strcat(production_rule, lastNonTerminal);
+                strcat(production_rule, derivation_arrow);
+                strcat(production_rule, stack_item);
+
+                print_ll1pt_exploitation_row(stack, input, production_rule);
+            }
+            else
+            {
+                if (strcmp(stack_item, input_item) == 0)
+                {
+                    stack = pop(stack);
+                    input = pop(input);
+
+                    // strcat(production_rule, lastNonTerminal);
+                    // strcat(production_rule, derivation_arrow);
+                    // strcat(production_rule, stack_item);
+                    production_rule[0] = '\0';
+                    print_ll1pt_exploitation_row(stack, input, production_rule);
+                }
+                else
+                {
+                    printf("Error");
+                    break;
+                }
+            }
         }
+
     }
 }
 

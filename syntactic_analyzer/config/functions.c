@@ -258,7 +258,7 @@ void print_stack(StringStack head)
     StringStack ptr = head;
     while (ptr != NULL)
     {
-        printf("%s ", ptr->string);
+        printf("%s", ptr->string);
         ptr = ptr->next;
     }
     
