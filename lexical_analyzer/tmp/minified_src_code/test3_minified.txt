@@ -1,0 +1,1 @@
+inty_,1x;x=10;y=20;printf("Comparing x to y");if(xa==10||20y==20){printf("X is greter then Y");}else{printf("X is lesser then Y");}$

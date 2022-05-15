@@ -27,6 +27,11 @@ int main(int argc, char **argv)
     sep_buffer[0] = ' ';
     sep_buffer[1] = '\0';
 
+    char tmp[3];
+
+    int equal_flag = 0;
+    int jump_flag = 0;
+
     // DEBUG
     char test;
     // DEBUG
@@ -63,7 +68,18 @@ int main(int argc, char **argv)
     {
         while ((ch = fgetc(filePointer)) != EOF)
         {
-            // Concatenate the character to the current word
+            if (equal_flag == 1 && ch != '=')
+            {
+                // Jump to ....
+                jump_flag = 1;
+                equal_flag = 0;
+                goto handle_eq;
+            }
+
+        // Back to concatenation
+
+        // Concatenate the character to the current word
+        concat:
             strncat(word, &ch, 1);
             word_length++;
 
@@ -108,14 +124,57 @@ int main(int argc, char **argv)
                 strcpy(lexical_unit, classify(sep_buffer, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
                 if (strcmp(lexical_unit, "sep") == 0)
                 {
-                    word[strlen(word) - 1] = '\0';
-                    strcpy(lexical_unit, classify(word, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
-                    printf("%s : %s\n", word, lexical_unit);
+                    if (equal_flag == 1 && ch == '=')
+                    {
+                        tmp[0] = word[strlen(word) - 2];
+                        tmp[1] = ch;
+                        tmp[2] = '\0';
 
-                    printf("%s : sep\n", sep_buffer);
+                        word[strlen(word) - 2] = '\0';
+                        strcpy(lexical_unit, classify(word, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
+                        printf("%s : %s\n", word, lexical_unit);
 
-                    word[0] = '\0';
-                    word_length = 0;
+                        strcpy(lexical_unit, classify(tmp, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
+                        printf("%s : %s\n", tmp, lexical_unit);
+
+                        word[0] = '\0';
+                        word_length = 0;
+                    }
+                    else if (equal_flag == 0 && ch == '=')
+                    {
+                        equal_flag = 1;
+                        continue;
+                    }
+
+                handle_eq:
+                    if (jump_flag == 1)
+                    {
+                        jump_flag = 0;
+                        word[strlen(word) - 1] = '\0';
+                        if (strlen(word) > 0)
+                        {
+                            strcpy(lexical_unit, classify(word, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
+                            printf("%s : %s\n", word, lexical_unit);
+                            printf("= : Affectation\n");
+
+                            word[0] = '\0';
+                            word_length = 0;
+                        }
+
+                        goto concat;
+                    }                 
+
+                    if (ch != '=')
+                    {
+                        word[strlen(word) - 1] = '\0';
+                        strcpy(lexical_unit, classify(word, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
+                        printf("%s : %s\n", word, lexical_unit);
+
+                        strcpy(lexical_unit, classify(sep_buffer, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
+                        printf("%s : sep\n", sep_buffer);
+                        word[0] = '\0';
+                        word_length = 0;
+                    }
                 }
                 else
                 {
@@ -125,14 +184,14 @@ int main(int argc, char **argv)
                         strcpy(lexical_unit, classify(word, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
                         if (strcmp(lexical_unit, "undefined") == 0)
                         {
-                            word[strlen(word) -1] = '\0';
+                            word[strlen(word) - 1] = '\0';
                             strcpy(lexical_unit, classify(word, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
                             printf("%s : %s\n", word, lexical_unit);
 
                             word[0] = ch;
                             word[1] = '\0';
                             word_length = 1;
-                        }  
+                        }
                     }
                     else
                     {
