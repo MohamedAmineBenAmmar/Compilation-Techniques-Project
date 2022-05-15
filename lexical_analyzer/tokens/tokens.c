@@ -6,10 +6,10 @@
 
 int predict_separation(char c, WL words_list){
     int res = 0;
-    WL ptr;
+    WL ptr = words_list;
     while (ptr != NULL)
     {
-        if(c == ptr->word[0]){
+        if(c == (ptr->word[0])){
             res = 1;
             break;
         }

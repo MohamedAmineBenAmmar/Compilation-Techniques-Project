@@ -22,6 +22,15 @@ int main(int argc, char **argv)
     word[0] = '\0';
     word_length = 0;
 
+    int predict_separation_flag;
+    char sep_buffer[2];
+    sep_buffer[0] = ' ';
+    sep_buffer[1] = '\0';
+
+    // DEBUG
+    char test;
+    // DEBUG
+
     keywords_list = extract_words("lexical_analyzer/config/files/keywords.txt");
     // display_words_list(keywords_list, "Keywords List");
 
@@ -54,8 +63,12 @@ int main(int argc, char **argv)
     {
         while ((ch = fgetc(filePointer)) != EOF)
         {
+            // Concatenate the character to the current word
             strncat(word, &ch, 1);
             word_length++;
+
+            // printf("word: %s\n", word);
+            // scanf("%c", &test);
 
             // Handling the messages
             if (msg_flag == 0)
@@ -78,29 +91,67 @@ int main(int argc, char **argv)
                 }
             }
 
-            // Determining the word nature
-            // Determine the lexical unit in wich the string belongs
+            // Classify the word
             strcpy(lexical_unit, classify(word, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
-
-            if (strcmp(lexical_unit, "keyword") == 0 || strcmp(lexical_unit, "msg") == 0)
+            if (strcmp(lexical_unit, "real") != 0 && strcmp(lexical_unit, "number") != 0 && strcmp(lexical_unit, "id") != 0 && strcmp(lexical_unit, "undefined") != 0)
             {
+                // printf("1\n");
                 printf("%s : %s\n", word, lexical_unit);
 
                 word[0] = '\0';
-                word_length = 0;    
+                word_length = 0;
             }
-            else if (strcmp(lexical_unit, "undefined") == 0)
+            else
             {
-                if (strlen(word) > 1)
+                // printf("2\n");
+                sep_buffer[0] = ch;
+                strcpy(lexical_unit, classify(sep_buffer, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
+                if (strcmp(lexical_unit, "sep") == 0)
                 {
-                    word[word_length - 1] = '\0';
+                    word[strlen(word) - 1] = '\0';
                     strcpy(lexical_unit, classify(word, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
                     printf("%s : %s\n", word, lexical_unit);
-                }
 
-                word[0] = ch;
-                word[1] = '\0';
-                word_length = 1;
+                    printf("%s : sep\n", sep_buffer);
+
+                    word[0] = '\0';
+                    word_length = 0;
+                }
+                else
+                {
+                    if (predict_separation_flag == 1)
+                    {
+                        predict_separation_flag = 0;
+                        strcpy(lexical_unit, classify(word, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
+                        if (strcmp(lexical_unit, "undefined") == 0)
+                        {
+                            word[strlen(word) -1] = '\0';
+                            strcpy(lexical_unit, classify(word, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
+                            printf("%s : %s\n", word, lexical_unit);
+
+                            word[0] = ch;
+                            word[1] = '\0';
+                            word_length = 1;
+                        }  
+                    }
+                    else
+                    {
+                        // Predection of an operator
+                        if (predict_separation(ch, logical_operators_list) == 1 || predict_separation(ch, relational_operators_list) == 1)
+                        {
+                            // printf("d5alt");
+                            word[strlen(word) - 1] = '\0';
+                            strcpy(lexical_unit, classify(word, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
+                            printf("%s : %s\n", word, lexical_unit);
+
+                            word[0] = ch;
+                            word[1] = '\0';
+                            word_length = 1;
+
+                            predict_separation_flag = 1;
+                        }
+                    }
+                }
             }
         }
     }
