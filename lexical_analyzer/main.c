@@ -87,7 +87,7 @@ int main(int argc, char **argv)
                 printf("%s : %s\n", word, lexical_unit);
 
                 word[0] = '\0';
-                word_length = 0;
+                word_length = 0;    
             }
             else if (strcmp(lexical_unit, "undefined") == 0)
             {

@@ -14,6 +14,8 @@ int isLogicalOperator(char *word, WL logical_operators_list); // Done
 int isRelationalOperator(char *word, WL relational_operators_list); // Done
 int isFunction(char *word, WL functions_list);
 
+
+int predict_separation(char c, WL words_list);
 char *classify(char *word, WL keywords_list, WL separators_list, WL operators_list, WL relational_operators_list, WL functions_list);
 
 #endif

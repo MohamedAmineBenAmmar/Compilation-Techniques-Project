@@ -3,6 +3,23 @@
 #include "stdlib.h"
 #include "ctype.h"
 
+
+int predict_separation(char c, WL words_list){
+    int res = 0;
+    WL ptr;
+    while (ptr != NULL)
+    {
+        if(c == ptr->word[0]){
+            res = 1;
+            break;
+        }
+        ptr = ptr->next;
+    }
+
+    return res;
+    
+}
+
 int isFraction(char *word)
 {
     int result = 1;

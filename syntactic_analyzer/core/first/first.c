@@ -71,6 +71,19 @@ void firstOf(Grammar main_node, Grammar secondary_node, Grammar g, SLL *firstOfA
                     index++;
                     goto check_point;
                 }
+                else
+                {
+                    if (index + 1 == strlen(sll_ptr->string))
+                    {
+                        // Adding epsilon to the current non terminal frirst
+                        buffer[0] = '@';
+                        sll_flag = sll_find(*firstOfArg, buffer);
+                        if (sll_flag == NULL)
+                        {
+                            sll_append(firstOfArg, buffer, 0);
+                        }
+                    }
+                }
             }
         }
 
