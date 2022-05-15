@@ -162,7 +162,7 @@ int main(int argc, char **argv)
                         }
 
                         goto concat;
-                    }                 
+                    }
 
                     if (ch != '=')
                     {
@@ -200,8 +200,12 @@ int main(int argc, char **argv)
                         {
                             // printf("d5alt");
                             word[strlen(word) - 1] = '\0';
-                            strcpy(lexical_unit, classify(word, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
-                            printf("%s : %s\n", word, lexical_unit);
+
+                            if (strlen(word) > 0)
+                            {
+                                strcpy(lexical_unit, classify(word, keywords_list, separators_list, logical_operators_list, relational_operators_list, functions_list));
+                                printf("%s : %s\n", word, lexical_unit);
+                            }
 
                             word[0] = ch;
                             word[1] = '\0';
